@@ -74,7 +74,7 @@ const Login3 = (props) => {
         <Form.Group>
           {/* <Form.Label>{encodeText}</Form.Label>
         <Form.Label>{encyKey}</Form.Label> */}
-          <Form.Label>Encoded text</Form.Label>
+          <Form.Label>Key</Form.Label>
           <Form.Control
             type="text"
             name="email"

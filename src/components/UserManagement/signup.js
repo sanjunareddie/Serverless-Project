@@ -132,10 +132,10 @@ const SignUp = () => {
               >
                 <option>Please choose an option</option>
                 <option value="Customer">Customer</option>
-                <option value="Hotel Management Admin">
+                <option value="Hotel_Management_Admin">
                   Hotel Management Admin
                 </option>
-                <option value="Tour Operator">Tour Operator</option>
+                <option value="Tour_Operator">Tour Operator</option>
               </select>
             </Form.Group>
             <Form.Group>
