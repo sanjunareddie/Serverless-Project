@@ -26,6 +26,7 @@ const Login = (props) => {
           userEmail = res.data.email;
           setCookie("Token", token, { path: "/" });
           setCookie("Email", userEmail, { path: "/" });
+          alert("You have succesfully logged in.")
           navigate("/login2");
         })
         .catch((error) => {

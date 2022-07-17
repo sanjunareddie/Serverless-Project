@@ -8,10 +8,11 @@ import { useNavigate } from "react-router-dom";
 
 const Login2 = (props) => {
   let customerid="";
+  let userType=""
   const navigate = useNavigate();
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
-  const [cookies, setCookies] = useCookies(["Email", "Customerid"]);
+  const [cookies, setCookies] = useCookies(["Email", "Customerid", "userType"]);
   
   const userEmail = cookies.Email;
   let handleSubmit = async (e) => {
@@ -25,7 +26,9 @@ const Login2 = (props) => {
         })
         .then((res) => {
           customerid = res.data.customerid;
+          userType = res.data.userType;
           setCookies("Customerid", customerid, { path: "/" });
+          setCookies("userType", userType, { path: "/" });
           alert("User data has matched successfully.");
           navigate("/login3");
         })
