@@ -16,32 +16,39 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [answer, setAnswer] = useState("");
   const [question, setQuestion] = useState("");
+  const [user, setUser] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const inputErrors = findErrors();
     if (Object.keys(inputErrors).length > 0) {
+      console.log(inputErrors);
       setErrors(inputErrors);
     } else {
       try {
         axios
-          .post("", {
-            name: name,
-            email: email,
-            password: password,
-            question: question,
-            answer: answer
-          })
+          .post(
+            "https://us-central1-assignment4-355202.cloudfunctions.net/add-user",
+            {
+              fullname: name,
+              email: email,
+              type: user,
+              password: password,
+              question: question,
+              answer: answer,
+            }
+          )
           .then((res) => {
             alert("User Account Created");
-            navigate("/login")
+            navigate("/login");
           })
           .catch((error) => {
-            alert("User Email already exists. Try resetting the password");
+            alert("Server side error. Please try again.");
+            navigate("/signup");
           });
       } catch (err) {
         alert("Could not sign up the user. Please try again!");
-        navigate("/signup")
+        navigate("/signup");
       }
       setDone(true);
     }
@@ -60,20 +67,13 @@ const SignUp = () => {
   };
 
   const findErrors = () => {
-    const { fname, lname, email, passW, cPassword } = form;
+    const { fname, email, passW, cPassword } = form;
     const inputErrors = {};
     //First name validation
     const regName = /^[a-zA-Z]+[a-zA-Z]+$/;
     if (!fname || fname === "") inputErrors.fname = "cannot be blank!";
     else if (!regName.test(fname))
       inputErrors.fname = "name can only contain alphabets";
-
-    //Last name validation
-    if (!lname || lname === "") inputErrors.lname = "cannot be blank!";
-    else if (!regName.test(lname))
-      inputErrors.lname = "name can only contain alphabets";
-    else if (fname === lname)
-      inputErrors.lname = "Last name and first name cannot be same";
 
     //Email validation
     const regEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -103,7 +103,7 @@ const SignUp = () => {
 
       {!done && [
         <div className="signup-container flex-column ">
-          <hr/>
+          <hr />
           <h3>User Registration</h3>
           <hr style={{ width: "20%", border: "1px solid black" }} />
           <Form style={{ width: "330px", textAlign: "left" }}>
@@ -114,13 +114,29 @@ const SignUp = () => {
                 name="name"
                 value={name}
                 placeholder="Please enter your full name"
-                onChange={(e) => {setField("fname", e.target.value)
-                setName( e.target.value)}}
+                onChange={(e) => {
+                  setField("fname", e.target.value);
+                  setName(e.target.value);
+                }}
                 isInvalid={!!errors.fname}
               />
               <Form.Control.Feedback type="invalid">
                 {errors.fname}
               </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label> User registration type</Form.Label>
+              <select
+                value={user.value}
+                onChange={(event) => setUser(event.target.value)}
+              >
+                <option>Please choose an option</option>
+                <option value="Customer">Customer</option>
+                <option value="Hotel Management Admin">
+                  Hotel Management Admin
+                </option>
+                <option value="Tour Operator">Tour Operator</option>
+              </select>
             </Form.Group>
             <Form.Group>
               <Form.Label>Email</Form.Label>
@@ -129,8 +145,10 @@ const SignUp = () => {
                 name="email"
                 value={email}
                 placeholder="Please enter your email ID"
-                onChange={(e) => {setField("email", e.target.value)
-              setEmail( e.target.value)}}
+                onChange={(e) => {
+                  setField("email", e.target.value);
+                  setEmail(e.target.value);
+                }}
                 isInvalid={!!errors.email}
               />
               <Form.Control.Feedback type="invalid">
@@ -144,8 +162,10 @@ const SignUp = () => {
                 name="password"
                 value={password}
                 placeholder="Please enter your password"
-                onChange={(e) => {setField("passW", e.target.value)
-              setPassword( e.target.value)}}
+                onChange={(e) => {
+                  setField("passW", e.target.value);
+                  setPassword(e.target.value);
+                }}
                 isInvalid={!!errors.passW}
               />
               <Form.Control.Feedback type="invalid">
@@ -165,33 +185,42 @@ const SignUp = () => {
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group>
-            <Form.Label> Please select your security question</Form.Label>
-          <select value={question.value} onChange={(event) => setQuestion({value: event.target.value})}>
-            <option value="Favourite colour">Your favourite colour</option>
-            <option value="Favorite sport">Your favorite sport</option>
-          </select>
-        </Form.Group>
-        <Form.Group>
-          <Form.Label></Form.Label>
-          <Form.Control
-            type="text"
-            name="answer"
-            value={answer}
-            placeholder="Please enter your security answer"
-            onChange={(e) => setAnswer(e.target.value)}
-          />
-        </Form.Group>
+              <Form.Label> Please select your security question</Form.Label>
+              <select
+                id="question"
+                // value={question.value}
+                onChange={(event) => setQuestion(event.target.value)}
+              >
+                <option>Please choose an option</option>
+                <option value="What is your favourite colour?">
+                  What is your favourite colour?
+                </option>
+                <option value="What is favorite sport?">
+                  What is favorite sport?
+                </option>
+              </select>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Answer </Form.Label>
+              <Form.Control
+                type="text"
+                name="answer"
+                value={answer}
+                placeholder="Please enter your security answer"
+                onChange={(e) => setAnswer(e.target.value)}
+              />
+            </Form.Group>
             <div
               className="button-container-success"
               type="submit"
               onClick={handleSubmit}
             >
-              Login
+              Register
             </div>
-            <br/>
+            <br />
             Already Registered? &nbsp;
             <Link to="/login">Log In</Link>
-            <hr style={{ width: "0%" }}/>
+            <hr style={{ width: "0%" }} />
           </Form>
         </div>,
       ]}

@@ -8,15 +8,15 @@ import Login3 from "./components/UserManagement/login3";
 
 import './App.css';
 
-const PrivateRoute = ({ children }) => {
-  const [cookie] = useCookies(["Token"]);
-  return !!cookie.Token ? children : <Navigate to="/login" replace={true} />;
-};
+// const PrivateRoute = ({ children }) => {
+//   const [cookie] = useCookies(["Token"]);
+//   return !!cookie.Token ? children : <Navigate to="/login" replace={true} />;
+// };
 
-const PublicRoute = ({ children }) => {
-  const [cookie] = useCookies(["Token"]);
-  return !!cookie.Token ? <Navigate to="/" replace={true} /> : children;
-};
+// const PublicRoute = ({ children }) => {
+//   const [cookie] = useCookies(["Token"]);
+//   return !!cookie.Token ? <Navigate to="/" replace={true} /> : children;
+// };
 
 
 function App() {
@@ -25,10 +25,10 @@ function App() {
       <BrowserRouter>
         <Routes>
         <Route path="/" element={<Login/>} />
-        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path="/signup" element={<PublicRoute><SignUp /></PublicRoute>} />
-        <Route path="/login2" element={<PublicRoute><Login2 /></PublicRoute>} />
-        <Route path="/login3" element={<PublicRoute><Login3 /></PublicRoute>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login2" element={<Login2 />} />
+        <Route path="/login3" element={<Login3 />} />
         </Routes>
       </BrowserRouter>
     </div>
