@@ -17,13 +17,13 @@ const Login = (props) => {
     e.preventDefault();
     try {
       axios
-        .post("", {
+        .post("https://us-central1-assignment4-355202.cloudfunctions.net/login-user-1", {
           email: email,
           password: password,
         })
         .then((res) => {
-          token = res.data.data.token;
-          userEmail = res.data.data.email;
+          token = res.data.token;
+          userEmail = res.data.email;
           setCookie("Token", token, { path: "/" });
           setCookie("Email", userEmail, { path: "/" });
           navigate("/login2");
@@ -69,10 +69,6 @@ const Login = (props) => {
           Submit
         </div>
         <hr style={{ width: "0%" }} />
-        {/* <p>
-          {" "}
-          Forgot your password? <Link to="/forgot">Click here</Link>{" "}
-        </p> */}
         Not Registered? &nbsp;
         <Link to="/signup">Sign Up</Link>
       </Form>

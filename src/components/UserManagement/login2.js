@@ -7,26 +7,26 @@ import "./UserAuth.css";
 import { useNavigate } from "react-router-dom";
 
 const Login2 = (props) => {
+  let customerid="";
   const navigate = useNavigate();
-  var token = "";
-  var userEmail = "";
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
-  const [cookie, setCookie] = useCookies(["Token", "Email"]);
-
+  const [cookies, setCookies] = useCookies(["Email", "Customerid"]);
+  
+  const userEmail = cookies.Email;
   let handleSubmit = async (e) => {
     e.preventDefault();
     try {
       axios
-        .post("", {
+        .post("https://us-central1-assignment4-355202.cloudfunctions.net/login-user-2", {
+          email:userEmail,
           question: question,
-          password: answer,
+          answer: answer,
         })
         .then((res) => {
-          token = res.data.data.token;
-          userEmail = res.data.data.email;
-          setCookie("Token", token, { path: "/" });
-          setCookie("Email", userEmail, { path: "/" });
+          customerid = res.data.customerid;
+          setCookies("Customerid", customerid, { path: "/" });
+          alert("User data has matched successfully.");
           navigate("/login3");
         })
         .catch((error) => {
@@ -47,12 +47,21 @@ const Login2 = (props) => {
         style={{ width: "330px", textAlign: "left", marginTop: "2" }}
       >
         <Form.Group>
-        <Form.Label> Please select your security question</Form.Label>
-          <select value={question.value} onChange={(event) => setQuestion({value: event.target.value})}>
-          <option value="Favourite colour">Your favourite colour</option>
-          <option value="Favorite sport">Your favorite sport</option>
-          </select>
-        </Form.Group>
+              <Form.Label> Please select your security question</Form.Label>
+              <select
+                id="question"
+                // value={question.value}
+                onChange={(event) => setQuestion(event.target.value)}
+              >
+                <option>Please choose an option</option>
+                <option value="What is your favourite colour?">
+                  What is your favourite colour?
+                </option>
+                <option value="What is favorite sport?">
+                  What is favorite sport?
+                </option>
+              </select>
+            </Form.Group>
         <Form.Group>
           <Form.Label>Your answer</Form.Label>
           <Form.Control
