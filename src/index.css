@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.homeCard {
+  margin-bottom: 20%;
+  cursor: pointer;
+}
+
+.homeCard:hover {
+  transform: scale(0.9);
+}
+
+.navheader{
+  margin-left: 100%;
+}
