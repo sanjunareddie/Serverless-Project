@@ -10,7 +10,7 @@ import "../../src/index.css";
 const HomePage = (props) => { 
 
     const [userType, setUserType] = useState();
-  const [cookies, setCookies, removeCookies] = useCookies(["logInTime", "userType", "Email", "Customerid", "Token"]);
+    const [cookies, setCookies, removeCookies] = useCookies(["logInTime", "userType", "Email", "Customerid", "Token"]);
     const navigate = useNavigate();
 
     useEffect(() => {
