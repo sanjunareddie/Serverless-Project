@@ -17,8 +17,35 @@ code {
   cursor: pointer;
 }
 
+.sample {
+  margin-left: 450px;
+  margin-Top: 50px;
+}
+
 .homeCard:hover {
   transform: scale(0.9);
+}
+
+.housedetails {
+  border: none;
+}
+
+.propertyCard {
+  width:50%;
+    height:fit-content;
+    background:#eceff1;
+    text-align:center;
+    cursor: pointer;
+    box-shadow: 2px 3px #888888;
+    border-radius: 5px;
+    margin-top: 30px;
+    margin-left: 300px;
+    margin-bottom: 10px;
+
+}
+
+.heading {
+  margin-top: 50px;
 }
 
 .navheader{

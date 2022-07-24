@@ -5,6 +5,7 @@ import { Form, Button } from "react-bootstrap";
 import HomeHeader from "./HomeHeader";
 import { useCookies } from "react-cookie";
 import DatePicker from "react-datepicker";
+import LexChat from "react-lex-plus";
 import { Navigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
@@ -19,18 +20,23 @@ const DEF_ITEM_DETAILS = {
 const TourBooking = () => {
     const navigate = useNavigate();
     const [tourid, setTourId]= useState();
+    const [userType, setUserType] = useState();
     const [userEmail, setUserEmail] = useState();
   const [inputTourBookingDetails, setInputTourBookingFoodDetails] = useState(DEF_ITEM_DETAILS);
-  const [cookies, setCookies] = useCookies(["Email"]);
+  const [cookies, setCookies] = useCookies(["Customerid", "userType"]);
 
   
   const params = useParams();
 
   useEffect(() => {
-    const userEmail = cookies.Email;
+    const userEmail = cookies.Customerid;
+    const userType = cookies.userType;
     if (userEmail!== null) {
         setUserEmail(userEmail);
     }
+    if (userType!== null) {
+      setUserType(userType);
+  }
     setTourId(params.id);
     //console.log(params.id);
     console.log(tourid);
@@ -78,7 +84,7 @@ const TourBooking = () => {
     axios
       .post("https://us-central1-assignment4-355202.cloudfunctions.net/book-tour", {
         tourid: tourid.toString(),
-        userEmail: userEmail,
+        userid: userEmail,
         duration: inputTourBookingDetails.duration,
         adults: inputTourBookingDetails.adults,
         children: inputTourBookingDetails.children,
@@ -89,7 +95,7 @@ const TourBooking = () => {
               title: "Tour booking is successful",
               text: "Press OK to order some food",
             }).then(() => {
-              navigate("/orderfood");
+              navigate("/");
             })
       }
     ).catch((err) => {

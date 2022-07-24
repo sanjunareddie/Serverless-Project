@@ -25,15 +25,6 @@ const TourOperatorHomePage = (props) => {
                         </div>
                     </Card>
                     </Col>
-                    <Col className="homeCard">
-                    <Card>
-                        <div >
-                            <h2>Tour requests</h2>
-                            <p>View the tour requested by the customer in order to add appropriate tour packages if possible.</p>
-                            <Button onClick={() => navigate("/tourrequests")}>View tour requests</Button>
-                        </div>
-                    </Card>
-                    </Col>
                 </Row>
                 </div>
         

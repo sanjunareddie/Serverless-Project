@@ -7,8 +7,6 @@ const axios = require("axios");
 
 const DEF_ITEM_DETAILS = {
     roomnumber: "",
-    fromDate: new Date(),
-    toDate: new Date(),
     roomType: "",
     bedrooms: "",
     price: "",
@@ -17,7 +15,8 @@ const DEF_ITEM_DETAILS = {
 const AddRoom = () => {
     const navigate = useNavigate();
   const [roomDetails, setRoomDetails] = useState(DEF_ITEM_DETAILS);
-
+  const [fromDate, setFromDate] = useState(new Date());
+    const [toDate, setToDate] = useState(new Date());
   const inputChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -29,20 +28,6 @@ const AddRoom = () => {
               [name]: value,
             });
             break;
-
-      case "fromDate":
-        setRoomDetails({
-          ...roomDetails,
-          [name]: value,
-        });
-        break;
-
-      case "toDate":
-        setRoomDetails({
-          ...roomDetails,
-          [name]: value,
-        });
-        break;
     
         case "roomType":
         setRoomDetails({
@@ -77,8 +62,8 @@ const AddRoom = () => {
     axios
       .post("https://us-central1-assignment4-355202.cloudfunctions.net/add-room", {
         roomnumber: roomDetails.roomnumber,
-        fromDate: roomDetails.fromDate,
-        toDate: roomDetails.toDate,
+        fromDate: fromDate,
+        toDate: toDate,
         roomType: roomDetails.roomType,
         bedrooms: roomDetails.bedrooms,
         price: roomDetails.price,
@@ -112,11 +97,11 @@ const AddRoom = () => {
         </div>
         <div className="form-group green-border-focus m-3 p-3">
           <label htmlFor="exampleFormControlTextarea5">From date</label>
-          <DatePicker selected={roomDetails.fromDate} className="form-control" type="date" name="fromDate" onChange={inputChange} placeholderText={'From'} />
+          <DatePicker selected={fromDate} className="form-control" onChange={(date) => setFromDate(date)} placeholderText={'From'} />
         </div>
         <div className="form-group m-3 p-3">
           <label>To date</label>
-          <DatePicker selected={roomDetails.toDate} className="form-control" type="date" name="toDate" onChange={inputChange} placeholderText={'From'} />
+          <DatePicker selected={toDate} className="form-control" onChange={(date) => setToDate(date)} placeholderText={'To'} />
         </div>
         <div className="form-group m-3 p-3">
           <label>Room type</label>

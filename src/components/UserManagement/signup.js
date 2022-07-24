@@ -219,9 +219,10 @@ const SignUp = () => {
               <Form.Control
                 type="number"
                 name="encryptionKey"
+                max="10"
                 value={encryptionKey}
                 placeholder="Please enter your security answer"
-                onChange={(e) => setEncryptionKey(e.target.value)}
+                onChange={(e) => e.target.value < 11 ? setEncryptionKey(e.target.value) : alert("Encryption key should be from 0 to 10")}
               />
             </Form.Group>
             <div

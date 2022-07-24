@@ -40,7 +40,7 @@ const HomePage = (props) => {
         <>
 
         
-        <div className='container-fluid homeimage' style={{ backgroundImage: `url(${bgimage})`, backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+        <div className='container-fluid homeimage' style={{ backgroundImage: `url(${bgimage})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", paddingBottom: "10%" }}>
             
             <Row><HomeHeader /></Row>
             <div className="homediv">
@@ -86,17 +86,20 @@ const HomePage = (props) => {
                 </div>
         
         </div>
-        <LexChat
-        botName="BreadBreakfastbookroom"
-        IdentityPoolId="us-east-1:9ae37937-66a0-4c57-914d-abd9db5bb5a9"
-        placeholder="Placeholder text"
-        backgroundColor="#FFFFFF"
-        height="430px"
-        region="us-east-1"
-        headerText="Welcome to Bed and Breakfast Serverless Chat bot"
-        headerStyle={{ backgroundColor: "#0d6efd", fontSize: "30px" }}
-      
-    />;
+        {userType === "customer" ? (
+            <LexChat
+            botName="BreadBreakfastbookroom"
+            IdentityPoolId="us-east-1:9ae37937-66a0-4c57-914d-abd9db5bb5a9"
+            placeholder="Placeholder text"
+            backgroundColor="#FFFFFF"
+            height="430px"
+            region="us-east-1"
+            headerText="Welcome to Bed and Breakfast Serverless Chat bot"
+            headerStyle={{ backgroundColor: "#0d6efd", fontSize: "30px" }}
+          
+        />
+        ) : null}
+        
         </>
     )
 }

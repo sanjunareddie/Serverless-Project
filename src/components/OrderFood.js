@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router";
 import bgimage from "../images/bg1.jpg";
+import LexChat from "react-lex-plus";
 import HomeHeader from "./HomeHeader";
 import "../../src/index.css";
 
@@ -12,12 +13,15 @@ const OrderFood = (props) => {
     const navigate = useNavigate();
     const [showMenu, setShowMenu] = useState([]); 
     const [userEmail, setUserEmail] = useState();
-    
+    const [userType, setUserType] = useState();
     const [order, setOrder] = useState([]); 
-    const [cookies, setCookies] = useCookies(["Email"]);
+    const [cookies, setCookies] = useCookies(["Email", "userType"]);
     useEffect(() => {
         const userEmail = cookies.Email;
-        
+        const userType = cookies.userType;
+    if (userType !== null) {
+      setUserType(userType);
+    }
         if (userEmail!== null) {
         setUserEmail(userEmail);
         }
@@ -69,7 +73,7 @@ const OrderFood = (props) => {
             order_details = {...order_details, [i]:orders[i]};
             }
             console.log(order_details);
-        axios.post("https://us-central1-assignment4-355202.cloudfunctions.net/order-food", order_details).then((response) => {
+        axios.post("https://us-central1-serverless-a2-352802.cloudfunctions.net/order_food", order_details).then((response) => {
             console.log(response);
             if (response.status === 200) {
                 Swal.fire({
@@ -102,44 +106,67 @@ const OrderFood = (props) => {
     }
 
     return (
-        <div>
-            <div className='container-fluid homeimage' style={{ backgroundImage: `url(${bgimage})`, backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+        <>
+            <div className='container-fluid homeimage' style={{ backgroundImage: `url(${bgimage})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", paddingBottom: "10%" }}>
             <Row><HomeHeader /></Row>
-            <section className="section contact-section" id="next">
+            <section className="" id="next">
             <div className="container">
-                <div className="row">
-                    <div className="col-md-7">
-                        <form className="bg-white p-md-5 p-4 mb-5 border">
+                <div className="row" style={{marginTop: "3%"}}>
+                    <div className="col-4"></div>
+                    <div className="col-4 bg-white mb-2 border">
+                        <form>
                     {showMenu? (
                     <div>
-                        <h1>Menu</h1>
+                        <h3>Menu</h3>
                         <div>
                         {showMenu.map((item) => (
+                            
                             <div className="row">
-                            <div className="col-md-12 form-group">
-                                <h3>{item.itemname}</h3>
+                            <div className="form-group">
+                                <h6>{item.itemname}</h6>
                                 <label className="text-black font-weight-bold" > Price {item.price}</label>
+                                <br></br>
                                 <input type="number" defaultValue={0}name={item.itemid} id={item.itemid}
                                     onChange={(e) => handleChange(e, item)} min={0}
-                                    className="form-control" style={{ width: '80px' }} />
+                                     style={{ width: '80px' }} />
                                 <hr></hr>
                             </div>
+                            <br></br>
+                            
                         </div>
+                        
                         ))}{" "}
+                        <button className="btn btn-primary btn-block text-white" onClick={(e) => handleSubmit(e)}>Order</button>
                         </div>
                     </div>
                     ) : (<h1>Oops!</h1>)}
                     </form>
-                        <div className="col-md-6 form-group">
+
+                    {/* <div className="col-md-4 form-group"></div>
+                        <div className="col-md-4 form-group">
                             <button className="btn btn-primary btn-block text-white" onClick={(e) => handleSubmit(e)}>Order</button>
-                        </div>
+                        </div> */}
+                    
                     </div>
                 </div>
             </div>
         </section>
             
         </div>
-        </div>
+        {userType === "customer" ? (
+        <LexChat
+        botName="BreadBreakfastbookroom"
+        IdentityPoolId="us-east-1:9ae37937-66a0-4c57-914d-abd9db5bb5a9"
+        placeholder="Placeholder text"
+        backgroundColor="#FFFFFF"
+        height="430px"
+        region="us-east-1"
+        headerText="Welcome to Bed and Breakfast Serverless Chat bot"
+        headerStyle={{ backgroundColor: "#0d6efd", fontSize: "30px" }}
+      
+    />
+    ) : null}
+        </>
     );
 }
 

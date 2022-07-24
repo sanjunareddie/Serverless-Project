@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import bgimage from "../images/bg1.jpg";
 import { useCookies } from "react-cookie";
+import LexChat from "react-lex-plus";
 import { useNavigate } from "react-router";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -73,37 +74,37 @@ function AvailableRooms() {
  // }
 
   return (
-    <div className='container-fluid homeimage' style={{ backgroundImage: `url(${bgimage})`, backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+    <>
+    <div className='container-fluid homeimage' style={{ backgroundImage: `url(${bgimage})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", paddingBottom: "30%" }}>
         <Row><HomeHeader /></Row>
-        <div className="homediv">
-          
-        <Row className="justify-content-md-center">
-          <Card className="totalCard">
+        <div >
             {showRooms? (
               <div>
                 <h2 className="heading" variant="primary">
                   List of available rooms
                 </h2>
-                <div>
+                <div className="sample">
+                  
                   {showRooms.map((item) => (
                     <div className="row propertyCard">
-                      <Col xs lg="2">
-                        <Card className="housedetails">
-                        <span className="househeading">
+                      <Col xs lg="6">
+                        <Card >
+                        <span >
                             Room Number: {item.roomnumber}
                           </span>
-                          <span className="househeading">
+                          <span >
                             Room category: {item.roomType}
                           </span>
-                          <span className="househeading">
+                          <span >
                             Bedrooms: {item.bedrooms}
                           </span>
                           <br />
                           <span>CA$ {item.price}/night</span>
                         </Card>
                         </Col>
-                        <Col xs lg="2">
+                        <Col xs lg="6">
                         <Button
+                        style={{marginTop: "30px"}}
                           variant="success saveproperty"
                           onClick={() => handleRoomClick(item.roomnumber)} >
                           Book room
@@ -120,11 +121,23 @@ function AvailableRooms() {
                 </span>
               </Card>
             )}
-          </Card>
-          </Row>
           
           </div>
       </div>
+      {userType === "customer" ? (
+        <LexChat
+        botName="BreadBreakfastbookroom"
+        IdentityPoolId="us-east-1:9ae37937-66a0-4c57-914d-abd9db5bb5a9"
+        placeholder="Placeholder text"
+        backgroundColor="#FFFFFF"
+        height="430px"
+        region="us-east-1"
+        headerText="Welcome to Bed and Breakfast Serverless Chat bot"
+        headerStyle={{ backgroundColor: "#0d6efd", fontSize: "30px" }}
+      
+    />
+    ) : null}
+    </>
     
   );
 }

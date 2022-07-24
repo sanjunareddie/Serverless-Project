@@ -14,7 +14,6 @@ import RoomBooking from "./components/RoomBooking";
 import OrderFood from "./components/OrderFood";
 import ProvideFeedback from "./components/ProvideFeedback";
 import AddTour from "./components/AddTour";
-import ViewRequestedTours from "./components/ViewRequestedTours";
 import RequestTour from "./components/RequestTour";
 import TourBooking from "./components/TourBooking";
 import FeedbackAnalysis from "./components/FeedbackAnalysis";
@@ -58,7 +57,6 @@ function App() {
         <Route path="/providefeedback" element={<ProvideFeedback/>} />
         <Route path="/touroperator" element={<TourOperatorHomePage/>} />
         <Route path="/addtour" element={<AddTour/>} />
-        <Route path="/tourrequests" element={<ViewRequestedTours/>} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login2" element={<Login2 />} />
