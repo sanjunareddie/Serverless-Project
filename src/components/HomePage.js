@@ -1,4 +1,5 @@
 import { useState, React, useEffect } from "react";
+import LexChat from "react-lex-plus";
 import HomeHeader from "./HomeHeader";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
@@ -36,6 +37,9 @@ const HomePage = (props) => {
     }
 
     return(
+        <>
+
+        
         <div className='container-fluid homeimage' style={{ backgroundImage: `url(${bgimage})`, backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
             
             <Row><HomeHeader /></Row>
@@ -82,6 +86,18 @@ const HomePage = (props) => {
                 </div>
         
         </div>
+        <LexChat
+        botName="BreadBreakfastbookroom"
+        IdentityPoolId="us-east-1:9ae37937-66a0-4c57-914d-abd9db5bb5a9"
+        placeholder="Placeholder text"
+        backgroundColor="#FFFFFF"
+        height="430px"
+        region="us-east-1"
+        headerText="Welcome to Bed and Breakfast Serverless Chat bot"
+        headerStyle={{ backgroundColor: "#0d6efd", fontSize: "30px" }}
+      
+    />;
+        </>
     )
 }
 
