@@ -6,61 +6,53 @@ import { useNavigate } from "react-router";
 const axios = require("axios");
 
 const DEF_ITEM_DETAILS = {
-    roomnumber: "",
-    fromDate: new Date(),
-    toDate: new Date(),
-    roomType: "",
-    bedrooms: "",
+    tourid: "",
+    tourname: "",
+    description: "",
+    duration: "",
     price: "",
 }
 
 const AddTour = () => {
     const navigate = useNavigate();
-  const [roomDetails, setRoomDetails] = useState(DEF_ITEM_DETAILS);
+  const [tourDetails, setTourDetails] = useState(DEF_ITEM_DETAILS);
 
   const inputChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
 
     switch (name) {
-        case "roomnumber":
-            setRoomDetails({
-              ...roomDetails,
+        case "tourid":
+            setTourDetails({
+              ...tourDetails,
               [name]: value,
             });
             break;
 
-      case "fromDate":
-        setRoomDetails({
-          ...roomDetails,
+      case "tourname":
+        setTourDetails({
+          ...tourDetails,
+          [name]: value,
+        });
+        break;
+      
+        case "description":
+        setTourDetails({
+          ...tourDetails,
           [name]: value,
         });
         break;
 
-      case "toDate":
-        setRoomDetails({
-          ...roomDetails,
+      case "duration":
+        setTourDetails({
+          ...tourDetails,
           [name]: value,
         });
         break;
     
-        case "roomType":
-        setRoomDetails({
-          ...roomDetails,
-          [name]: value,
-        });
-        break;
-
         case "price":
-            setRoomDetails({
-              ...roomDetails,
-              [name]: value,
-            });
-            break;
-
-        case "bedrooms":
-        setRoomDetails({
-          ...roomDetails,
+            setTourDetails({
+          ...tourDetails,
           [name]: value,
         });
         break;
@@ -70,24 +62,27 @@ const AddTour = () => {
     }
   };
 
-  const handleAddRoomSubmit = (e) => {
+  const handleAddTourSubmit = (e) => {
     e.preventDefault();
-    console.log(setRoomDetails);
+    console.log(tourDetails);
 
     axios
-      .post("https://us-central1-assignment4-355202.cloudfunctions.net/add-room", {
-        roomnumber: roomDetails.roomnumber,
-        fromDate: roomDetails.fromDate,
-        toDate: roomDetails.toDate,
-        roomType: roomDetails.roomType,
-        bedrooms: roomDetails.bedrooms,
-        price: roomDetails.price,
+      .post("https://us-central1-assignment4-355202.cloudfunctions.net/add-tour", {
+        tourid: tourDetails.tourid,
+        tourname: tourDetails.tourname,
+        description: tourDetails.description,
+        duration: tourDetails.duration,
+        price: tourDetails.price
       })
       .then((res) => {
-        alert("Room added successfully.");
-        navigate("/hotel");
+        alert("Tour added successfully.");
+        navigate("/touroperator");
         window.location.reload();
-      });
+      })
+      .catch((error) => {
+        console.log(error.response);
+        alert("error");
+      }); 
   };
 
   return (
@@ -97,44 +92,46 @@ const AddTour = () => {
     <div className="container mt-2">
      
       <center className="mt-2">
-        <h3> Add a room</h3>
+        <h3> Add a tour</h3>
       </center>
       <Form className="mt-4 border border-primary">
       <div className="form-group m-3 p-3">
-          <label>Room number</label>
+          <label>Tour ID</label>
           <input
             className="form-control"
             type="text"
-            name="roomnumber"
-            placeholder="Enter Room number"
-            onChange={inputChange}
-          />
-        </div>
-        <div className="form-group green-border-focus m-3 p-3">
-          <label htmlFor="exampleFormControlTextarea5">From date</label>
-          <DatePicker selected={roomDetails.fromDate} className="form-control" type="date" name="fromDate" onChange={inputChange} placeholderText={'From'} />
-        </div>
-        <div className="form-group m-3 p-3">
-          <label>To date</label>
-          <DatePicker selected={roomDetails.toDate} className="form-control" type="date" name="toDate" onChange={inputChange} placeholderText={'From'} />
-        </div>
-        <div className="form-group m-3 p-3">
-          <label>Room type</label>
-          <input
-            className="form-control"
-            type="text"
-            name="roomType"
-            placeholder="Enter Room type"
+            name="tourid"
+            placeholder="Enter Tour ID"
             onChange={inputChange}
           />
         </div>
         <div className="form-group m-3 p-3">
-          <label>Number of bedrooms</label>
+          <label>Tour name</label>
           <input
             className="form-control"
             type="text"
-            name="bedrooms"
-            placeholder="Enter number of bedrooms"
+            name="tourname"
+            placeholder="Enter Tour name"
+            onChange={inputChange}
+          />
+        </div>
+        <div className="form-group m-3 p-3">
+          <label>Tour Description</label>
+          <input
+            className="form-control"
+            type="text"
+            name="description"
+            placeholder="Enter tour description"
+            onChange={inputChange}
+          />
+        </div>
+        <div className="form-group m-3 p-3">
+          <label>Duration</label>
+          <input
+            className="form-control"
+            type="text"
+            name="duration"
+            placeholder="Enter duration"
             onChange={inputChange}
           />
         </div>
@@ -149,8 +146,8 @@ const AddTour = () => {
           />
         </div>
         <center>
-          <Button className = "mb-2" variant="success" onClick={handleAddRoomSubmit}>
-            Add room
+          <Button className = "mb-2" variant="success" onClick={handleAddTourSubmit}>
+            Add tour
           </Button>
         </center>
       </Form>

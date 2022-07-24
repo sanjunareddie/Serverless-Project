@@ -30,27 +30,15 @@ export const HomeHeader = () => {
   }, [1]);
 
   const handleLogout = () => {
-    axios
-      .post("https://us-central1-assignment4-355202.cloudfunctions.net/login_stats", {
-        email: userEmail,
-        login: logInTime
-      })
-      .then((res) => {
+    
         removeCookies("logInTime");
     	removeCookies("userType");
     	removeCookies("Email");
     	removeCookies("Customerid");
    	removeCookies("Token");
     	removeCookies("RoomNumber");
-        window.location.reload();
         alert("logged out successfully.");
         navigate("/login");
-        
-      })
-      .catch((error) => {
-        console.log(error.response);
-        alert("error");
-      }); 
     
 };
   //console.log(userType);
@@ -72,135 +60,6 @@ export const HomeHeader = () => {
                 >
                   Home
                 </Button>
-
-                {userType == "hotel_management_admin" && (
-                  <Button
-                    href="/viewfeedback"
-                    style={{
-                      color: "white",
-                      textDecoration: "none",
-                      backgroundColor: "transparent"
-                    }}
-                  >
-                    Feedback Analysis
-                  </Button>
-                )}
-                {(userType == "customer") && (
-                  <Button
-                    href="/feedback"
-                    style={{
-                      color: "white",
-                      textDecoration: "none",
-                      backgroundColor: "transparent"
-                    }}
-                  >
-                    Provide Feedback
-                  </Button>
-                )}
-
-                {(userType == "customer") && (
-                  <Button
-                    href="/bookrooms"
-                    style={{
-                      color: "white",
-                      textDecoration: "none",
-                      backgroundColor: "transparent"
-                    }}
-                  >
-                    Book rooms
-                  </Button>
-                )}
-
-                {(userType == "customer") && (
-                  <Button
-                    href="/orderfood"
-                    style={{
-                      color: "white",
-                      textDecoration: "none",
-                      backgroundColor: "transparent"
-                    }}
-                  >
-                    Order food
-                  </Button>
-                )}
-
-                {(userType == "customer") && (
-                  <Button
-                    href="/viewmenu"
-                    style={{
-                      color: "white",
-                      textDecoration: "none",
-                      backgroundColor: "transparent"
-                    }}
-                  >
-                    View menu
-                  </Button>
-                )}
-
-                {(userType == "customer") && (
-                  <Button
-                    href="/booktours"
-                    style={{
-                      color: "white",
-                      textDecoration: "none",
-                      backgroundColor: "transparent"
-                    }}
-                  >
-                    Book tours
-                  </Button>
-                )}
-
-                {userType == "hotel_management_admin" && (
-                  <Button
-                    href="/addrooms"
-                    style={{
-                      color: "white",
-                      textDecoration: "none",
-                      backgroundColor: "transparent"
-                    }}
-                  >
-                    Add Rooms
-                  </Button>
-                )}
-
-                {userType == "hotel_management_admin" && (
-                  <Button
-                    href="/viewfoodorders"
-                    style={{
-                      color: "white",
-                      textDecoration: "none",
-                      backgroundColor: "transparent"
-                    }}
-                  >
-                    View Food orders
-                  </Button>
-                )}
-
-                {userType == "tour_operator" && (
-                  <Button
-                    href="/addtour"
-                    style={{
-                      color: "white",
-                      textDecoration: "none",
-                      backgroundColor: "transparent"
-                    }}
-                  >
-                    Add tour
-                  </Button>
-                )}
-
-                {userType == "tour_operator" && (
-                  <Button
-                    href="/viewrequestedtours"
-                    style={{
-                      color: "white",
-                      textDecoration: "none",
-                      backgroundColor: "transparent"
-                    }}
-                  >
-                    View requested tours
-                  </Button>
-                )}
 
                 {!userType && (
                   <>

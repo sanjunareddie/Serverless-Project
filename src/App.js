@@ -15,6 +15,14 @@ import OrderFood from "./components/OrderFood";
 import ProvideFeedback from "./components/ProvideFeedback";
 import AddTour from "./components/AddTour";
 import ViewRequestedTours from "./components/ViewRequestedTours";
+import RequestTour from "./components/RequestTour";
+import TourBooking from "./components/TourBooking";
+import FeedbackAnalysis from "./components/FeedbackAnalysis";
+import Visualize from "./components/Visualize";
+import VisualizeRoom from "./components/VisualizeRoom";
+import VisualizeIncomeProfit from "./components/VisualizeIncomeProfit";
+import VisualizeFoodOrder from "./components/VisualizeFoodOrder";
+import UserStatistics from "./components/UserStatistics";
 import './App.css';
 
 // const PrivateRoute = ({ children }) => {
@@ -36,9 +44,17 @@ function App() {
         <Route path="/" element={<HomePage/>} />
         <Route path="/hotel" element={<HotelHomepage/>} />
         <Route path="/addrooms" element={<AddRoom/>} />
+        <Route path="/viewfeedbackanalysis" element={<FeedbackAnalysis/>} />
+        <Route path="/visualize" element={<Visualize/>} />
+        <Route path="/visualizeroom" element={<VisualizeRoom/>} />
+        <Route path="/visualizeincomeprofit" element={<VisualizeIncomeProfit/>} />
+        <Route path="/visualizefoodorder" element={<VisualizeFoodOrder/>} />
+        <Route path="/userstatistics" element={<UserStatistics/>} />
         <Route path="/availablerooms" element={<AvailableRooms/>} />
         <Route path="/bookroom/:id" element={<RoomBooking/>} />
         <Route path="/orderfood" element={<OrderFood/>} />
+        <Route path="/tours" element={<RequestTour/>} />
+        <Route path="/booktour/:id" element={<TourBooking/>} />
         <Route path="/providefeedback" element={<ProvideFeedback/>} />
         <Route path="/touroperator" element={<TourOperatorHomePage/>} />
         <Route path="/addtour" element={<AddTour/>} />

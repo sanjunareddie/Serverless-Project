@@ -11,35 +11,29 @@ import { useNavigate } from "react-router";
 const axios = require("axios");
 
 const DEF_ITEM_DETAILS = {
-    fromDate: new Date(),
-    toDate: new Date(),
+    duration: "",
     adults: "",
     children: ""
 }
 
-const RoomBooking = () => {
+const TourBooking = () => {
     const navigate = useNavigate();
-    const [room, setRoom]= useState();
-    const [userType, setUserType] = useState();
+    const [tourid, setTourId]= useState();
     const [userEmail, setUserEmail] = useState();
-  const [inputRoomBookingDetails, setInputRoomBookingFoodDetails] = useState(DEF_ITEM_DETAILS);
-  const [cookies, setCookies] = useCookies(["Email", "userType"]);
+  const [inputTourBookingDetails, setInputTourBookingFoodDetails] = useState(DEF_ITEM_DETAILS);
+  const [cookies, setCookies] = useCookies(["Email"]);
 
   
   const params = useParams();
 
   useEffect(() => {
     const userEmail = cookies.Email;
-    const userType = cookies.userType;
     if (userEmail!== null) {
         setUserEmail(userEmail);
     }
-    if (userType!== null) {
-      setUserType(userType);
-  }
-    setRoom(params.id);
+    setTourId(params.id);
     //console.log(params.id);
-    console.log(room);
+    console.log(tourid);
   }, [1]);
 
   //Function to store the entered values in local variables depending on the input field
@@ -48,30 +42,24 @@ const RoomBooking = () => {
     const value = e.target.value;
 
     switch (name) {
-      case "fromDate":
-        setInputRoomBookingFoodDetails({
-          ...inputRoomBookingDetails,
-          [name]: value,
-        });
-        break;
 
-      case "toDate":
-        setInputRoomBookingFoodDetails({
-          ...inputRoomBookingDetails,
+      case "duration":
+        setInputTourBookingFoodDetails({
+          ...inputTourBookingDetails,
           [name]: value,
         });
         break;
 
       case "adults":
-        setInputRoomBookingFoodDetails({
-          ...inputRoomBookingDetails,
+        setInputTourBookingFoodDetails({
+          ...inputTourBookingDetails,
           [name]: value,
         });
         break;
 
     case "children":
-        setInputRoomBookingFoodDetails({
-           ...inputRoomBookingDetails,
+      setInputTourBookingFoodDetails({
+           ...inputTourBookingDetails,
             [name]: value,
         });
         break;
@@ -82,24 +70,23 @@ const RoomBooking = () => {
   };
 
   //Function to call the POST API to store the food request details into the database on clicking Submit button.
-  const handleBookRoomSubmit = (e) => {
+  const handleBookTourSubmit = (e) => {
     e.preventDefault();
     //const userId = JSON.parse(localStorage.getItem("user"))._id;
-    console.log(setInputRoomBookingFoodDetails);
-    if(userType === "customer") {
-      axios
-      .post("https://us-central1-serverless-a2-352802.cloudfunctions.net/room_booking", {
-        roomnumber: room.toString(),
+    console.log(setInputTourBookingFoodDetails);
+
+    axios
+      .post("https://us-central1-assignment4-355202.cloudfunctions.net/book-tour", {
+        tourid: tourid.toString(),
         userEmail: userEmail,
-        fromDate: inputRoomBookingDetails.fromDate,
-        toDate: inputRoomBookingDetails.toDate,
-        adults: inputRoomBookingDetails.adults,
-        children: inputRoomBookingDetails.children,
+        duration: inputTourBookingDetails.duration,
+        adults: inputTourBookingDetails.adults,
+        children: inputTourBookingDetails.children,
       })
       .then((response) => {           
             Swal.fire({
               icon: "success",
-              title: "Room booking is successful",
+              title: "Tour booking is successful",
               text: "Press OK to order some food",
             }).then(() => {
               navigate("/orderfood");
@@ -109,23 +96,12 @@ const RoomBooking = () => {
       console.log(err);
       Swal.fire({
         icon: "warning",
-        title: "There is already a room with this user id",
+        title: "There is already a tour booked with this user id",
         text: "Press OK to order some food",
       }).then(() => {
-        navigate("/orderfood");
+        navigate("/");
       })
-    }) 
-    }
-    else {
-      Swal.fire({
-        icon: "warning",
-        title: "Kindly login to book a room",
-        text: "Press OK",
-      }).then(() => {
-        navigate("/login");
-      })
-    }
-    
+  }) 
   };
 
   return (
@@ -135,16 +111,18 @@ const RoomBooking = () => {
     <div className="container mt-2">
      
       <center className="mt-2">
-        <h3> Book room</h3>
+        <h3> Book tour</h3>
       </center>
       <Form className="mt-4 border border-primary">
-        <div className="form-group green-border-focus m-3 p-3">
-          <label htmlFor="exampleFormControlTextarea5">From date</label>
-          <DatePicker selected={inputRoomBookingDetails.fromDate} className="form-control" type="text" name="fromDate" onChange={inputChange} placeholderText={'From'} />
-        </div>
-        <div className="form-group m-3 p-3">
-          <label>To date</label>
-          <DatePicker selected={inputRoomBookingDetails.toDate} className="form-control" type="text" name="toDate" onChange={inputChange} placeholderText={'From'} />
+      <div className="form-group m-3 p-3">
+          <label>Duration</label>
+          <input
+            className="form-control"
+            type="text"
+            name="duration"
+            placeholder="Enter duration of tour"
+            onChange={inputChange}
+          />
         </div>
         <div className="form-group m-3 p-3">
           <label>Number of adults</label>
@@ -167,8 +145,8 @@ const RoomBooking = () => {
           />
         </div>
         <center>
-          <Button className = "mb-2" variant="success" onClick={handleBookRoomSubmit}>
-            Book room
+          <Button className = "mb-2" variant="success" onClick={handleBookTourSubmit}>
+            Book tour
           </Button>
         </center>
       </Form>
@@ -177,4 +155,4 @@ const RoomBooking = () => {
   );
 };
 
-export default RoomBooking;
+export default TourBooking;
