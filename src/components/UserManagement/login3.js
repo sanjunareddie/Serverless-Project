@@ -1,4 +1,4 @@
-import { useState, useRef, React } from "react";
+import { useState, useRef, React, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
@@ -6,7 +6,7 @@ import { useCookies } from "react-cookie";
 import "./UserAuth.css";
 import { useNavigate } from "react-router-dom";
 
-const encyKey = Math.floor(Math.random() * (4 - 0) + 1);
+// const encyKey = Math.floor(Math.random() * (4 - 0) + 1);
 
 function makeid(length) {
   var result           = '';
@@ -22,7 +22,21 @@ const cipher = makeid(10);
 
 const Login3 = (props) => {
   const navigate = useNavigate();
+  const [userEmail, setUserEmail] = useState();
   const [decodeText, setDecodeText] = useState("");
+  const [userType, setUserType] = useState();
+  const [cookies, setCookies] = useCookies(["userType", "Email", "logInTime"]);
+
+  useEffect(() => {
+    const userType = cookies.userType;
+    const userEmail = cookies.Email;
+    if (userType !== null) {
+      setUserType(userType);
+    }
+    if(userEmail !== null) {
+      setUserEmail(userEmail);
+    }
+  }, [1]);
 
   let handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,13 +44,24 @@ const Login3 = (props) => {
       axios
         .post("https://us-central1-assignment4-355202.cloudfunctions.net/login-user-3", {
           text: cipher,
-          key: encyKey,
+          userEmail : userEmail,
           decrypt: decodeText,
         })
         .then((res) => {
           if(res.data.data == "Cipher matched"){
+            var logInTime = res.data.timeStamp;
+            setCookies("logInTime", logInTime, { path: "/" });
           alert(res.data.data);
-          navigate("/");}
+          if(userType == "hotel_management_admin"){
+            navigate("/hotel");
+          }
+          else if(userType == "tour_operator"){
+            navigate("/touroperator");
+          }
+          else {
+            navigate("/");
+          }
+          }
           else if (res.data.data == "Cipher mismatched"){
             alert(res.data.data);
             navigate("/login3")
@@ -71,17 +96,16 @@ const Login3 = (props) => {
             disabled
           />
         </Form.Group>
-        <Form.Group>
           {/* <Form.Label>{encodeText}</Form.Label>
-        <Form.Label>{encyKey}</Form.Label> */}
-          <Form.Label>Key</Form.Label>
-          <Form.Control
+          <Form.Label>{encyKey}</Form.Label> */}
+         {/* <Form.Label>Key</Form.Label> */}
+          {/* <Form.Control
             type="text"
             name="email"
             value={encyKey}
             disabled
-          />
-        </Form.Group>
+          /> */}
+
         <Form.Group>
           {/* <Form.Label>{encodeText}</Form.Label>
         <Form.Label>{encyKey}</Form.Label> */}

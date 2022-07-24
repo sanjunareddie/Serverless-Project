@@ -15,6 +15,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [answer, setAnswer] = useState("");
+  const [encryptionKey, setEncryptionKey] = useState("");
   const [question, setQuestion] = useState("");
   const [user, setUser] = useState("");
 
@@ -36,6 +37,7 @@ const SignUp = () => {
               password: password,
               question: question,
               answer: answer,
+              encyKey: Number(encryptionKey),
             }
           )
           .then((res) => {
@@ -43,10 +45,12 @@ const SignUp = () => {
             navigate("/login");
           })
           .catch((error) => {
+            console.log(error);
             alert("Server side error. Please try again.");
             navigate("/signup");
           });
       } catch (err) {
+        console.log(err);
         alert("Could not sign up the user. Please try again!");
         navigate("/signup");
       }
@@ -208,6 +212,17 @@ const SignUp = () => {
                 value={answer}
                 placeholder="Please enter your security answer"
                 onChange={(e) => setAnswer(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Encryption key </Form.Label>
+              <Form.Control
+                type="number"
+                name="encryptionKey"
+                max="10"
+                value={encryptionKey}
+                placeholder="Please enter your security answer"
+                onChange={(e) => e.target.value < 11 ? setEncryptionKey(e.target.value) : alert("Encryption key should be from 0 to 10")}
               />
             </Form.Group>
             <div
