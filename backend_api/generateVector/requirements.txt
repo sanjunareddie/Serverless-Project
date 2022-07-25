@@ -1,0 +1,6 @@
+# Function dependencies, for example:
+# package>=version
+google-cloud-storage
+python-Levenshtein
+gcsfs==0.6.2
+pandas==1.1.0
