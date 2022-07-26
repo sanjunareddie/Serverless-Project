@@ -4,7 +4,7 @@ from google.cloud import language_v1
 
 fileName="feedback.csv"
 bucketName="bedtobreakfast"
-projectId="serverless-a2-352802";
+projectId="serverless-a2-352802"
 
 def feedback_csv(event, context):
 
@@ -15,23 +15,40 @@ def feedback_csv(event, context):
 
     print(email + " " + feedback + " " + polarity + " " + str(sentiment_score))
 
-    # update csv
-    client = storage.Client(project=projectId)
-    bucket = client.get_bucket(bucketName)
-    blob_object = bucket.blob(fileName)
+    # update csv in cloud storage
 
-    if(blob_object.exists()):
-        blob_object.download_to_filename('/tmp/' + fileName)
-        f = open('/tmp/' + fileName, 'a', newline="")
-        writer = csv.writer(f)
-        writer.writerow([email, feedback, polarity, sentiment_score])
-        f.close()
-        blob_object.upload_from_filename('/tmp/' + fileName)
+    #create client object
+    clientObject = storage.Client(project=projectId)
+    #create bucket object
+    bucketObject = clientObject.get_bucket(bucketName)
+    #create file object
+    fileObject = bucketObject.blob(fileName)
+    # checks file exist or not
+    if(fileObject.exists()):
+        #download file to local machine
+        fileObject.download_to_filename('/tmp/' + fileName)
+        #open the file
+        file = open('/tmp/' + fileName, 'a', newline="")
+        #create file writer object
+        fileWriter = csv.writer(file)
+        #write in the file
+        fileWriter.writerow([email, feedback, polarity, sentiment_score])
+        #close the file
+        file.close()
+        #upload the updated file
+        fileObject.upload_from_filename('/tmp/' + fileName)
     else:  
-        f = open('/tmp/' + fileName, 'a', newline="")
+        #download file to local machine
+        file = open('/tmp/' + fileName, 'a', newline="")
+        #create csv header
         headers = ['userid', 'feedback', 'polarity','sentiment_score']
-        writer = csv.writer(f)
-        writer.writerow(headers)
-        writer.writerow([email, feedback, polarity, sentiment_score])
-        f.close()
-        blob_object.upload_from_filename('/tmp/' + fileName)
+        #create file writer object
+        fileWriter = csv.writer(file)
+        #add headers in csv
+        fileWriter.writerow(headers)
+        #write in the file
+        fileWriter.writerow([email, feedback, polarity, sentiment_score])
+        #close the file
+        file.close()
+        #upload the updated file
+        fileObject.upload_from_filename('/tmp/' + fileName)

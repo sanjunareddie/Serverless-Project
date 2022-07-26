@@ -5,15 +5,16 @@ import csv
 from google.cloud import language_v1
 from flask_cors import cross_origin
 
+#set file name, bucket name and project id
 fileName="room.csv"
 bucketName="bedtobreakfast"
-projectId="serverless-a2-352802";
+projectId="serverless-a2-352802"
 
 if not firebase_admin._apps:
     cred = credentials.Certificate("keys.json")
     default_app = firebase_admin.initialize_app(cred)
 
-db = firestore.client()
+database = firestore.client()
 
 @cross_origin(allowed_methods=['POST'])
 def room_booking(request):
@@ -28,7 +29,7 @@ def room_booking(request):
         return ('',204, headers)
     
     data={}
-    
+    #get the user input
     request_data = request.get_json()
     roomNumber = request_data["roomnumber"]
     userEmail = request_data["userEmail"]
@@ -39,31 +40,31 @@ def room_booking(request):
     status = "booked"
     
     try:
-        doc_ref = db.collection(u'room_booking').where("email", "==", userEmail)
-        doc = doc_ref.get()
-        data = [el.to_dict() for el in doc]
+        document_reference = database.collection(u'room_booking').where("email", "==", userEmail)
+        document = document_reference.get()
+        data = [al.to_dict() for al in document]
 
-        doc_ref3 = db.collection(u'user_data').where("email", "==", userEmail)
-        doc2 = doc_ref3.get()
-        data2 = [el.to_dict() for el in doc]
+        document_reference_2 = database.collection(u'user_data').where("email", "==", userEmail)
+        doc2 = document_reference_2.get()
+        data1 = [doc.to_dict() for doc in document]
 
         if(len(data)>0): 
-            for i in data:
-                if (i["email"] == userEmail):
+            for singleData in data:
+                if (singleData["email"] == userEmail):
                     headers = {'Access-Control-Allow-Origin': '*'}
                     message={"message": "Email ID exists."}
                     return (message,400, headers)
         
-        if(len(data2)>0): 
-            for i in data2:
-                if (i["email"] != userEmail):
+        if(len(data1)>0): 
+            for singleData in data1:
+                if (singleData["email"] != userEmail):
                     headers = {'Access-Control-Allow-Origin': '*'}
                     message={"message": "User is not registered."}
                     return (message,404, headers)
 
         if(len(data)==0):
-            doc_ref = db.collection(u'room_booking').document(str(roomNumber))
-            doc_ref.set({
+            document_reference = database.collection(u'room_booking').document(str(roomNumber))
+            document_reference.set({
                             u'roomnumber':roomNumber,
                             u'fromDate': fromDate,
                             u'toDate': toDate,
@@ -72,29 +73,46 @@ def room_booking(request):
                             u'children' : children
                         })
             
-            doc_ref1 = db.collection(u'rooms_table').document(str(roomNumber))
-            doc_ref1.update({u'status':status})
+            document_reference_1 = database.collection(u'rooms_table').document(str(roomNumber))
+            document_reference_1.update({u'status':status})
   
-            # update csv
-            client = storage.Client(project=projectId)
-            bucket = client.get_bucket(bucketName)
-            blob_object = bucket.blob(fileName)
+            # update csv in cloud storage
 
-            if(blob_object.exists()):
-                blob_object.download_to_filename('/tmp/' + fileName)
-                f = open('/tmp/' + fileName, 'a', newline="")
-                writer = csv.writer(f)
-                writer.writerow([roomNumber, userEmail, adults, children])
-                f.close()
-                blob_object.upload_from_filename('/tmp/' + fileName)
+            #create client object
+            clientObject = storage.Client(project=projectId)
+            #create bucket object
+            bucketObject = clientObject.get_bucket(bucketName)
+            #create file object
+            fileObject = bucketObject.blob(fileName)
+            # checks file exist or not
+            if(fileObject.exists()):
+                #download file to local machine
+                fileObject.download_to_filename('/tmp/' + fileName)
+                #open the file
+                file = open('/tmp/' + fileName, 'a', newline="")
+                #create file writer object
+                fileWriter = csv.writer(file)
+                #write in the file
+                fileWriter.writerow([roomNumber, userEmail, adults, children])
+                #close the file
+                file.close()
+                #upload the updated file
+                fileObject.upload_from_filename('/tmp/' + fileName)
             else:  
-                f = open('/tmp/' + fileName, 'a', newline="")
-                header = ['roomnumber', 'email', 'adults','childrens']
-                writer = csv.writer(f)
-                writer.writerow(header)
-                writer.writerow([roomNumber, userEmail, adults, children])
-                f.close()
-                blob_object.upload_from_filename('/tmp/' + fileName)
+                #open the file
+                file = open('/tmp/' + fileName, 'a', newline="")
+                #create csv header
+                CSVHeaders = ['roomnumber', 'email', 'adults','childrens']
+                 #create file writer object
+                fileWriter = csv.writer(file)
+                #add headers in csv
+                fileWriter.writerow(CSVHeaders)
+                #write in the file
+                fileWriter.writerow([roomNumber, userEmail, adults, children])
+                #close the file
+                file.close()
+                #upload the updated file
+                fileObject.upload_from_filename('/tmp/' + fileName)
         
             headers = {'Access-Control-Allow-Origin': '*'}
             data={"message": "Room booked succesfully."}

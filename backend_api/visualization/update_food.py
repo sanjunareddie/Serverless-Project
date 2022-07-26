@@ -6,9 +6,10 @@ from google.cloud import storage
 import csv
 from google.cloud import language_v1
 
+#set file name, bucket name and project id
 fileName="foodorder.csv"
 bucketName="bedtobreakfast"
-projectId="serverless-a2-352802";
+projectId="serverless-a2-352802"
 
 if not firebase_admin._apps:
     cred = credentials.Certificate("keys.json")
@@ -62,26 +63,43 @@ def order_food(request):
                         u'year':year
                     })
 
-            # update csv
-            client = storage.Client(project=projectId)
-            bucket = client.get_bucket(bucketName)
-            blob_object = bucket.blob(fileName)
+            # update csv in cloud storage
 
-            if(blob_object.exists()):
-                blob_object.download_to_filename('/tmp/' + fileName)
-                f = open('/tmp/' + fileName, 'a', newline="")
-                writer = csv.writer(f)
-                writer.writerow([userEmail, userEmail, orderId, orderAmount])
-                f.close()
-                blob_object.upload_from_filename('/tmp/' + fileName)
-            else:  
-                f = open('/tmp/' + fileName, 'a', newline="")
-                header = ['customerid', 'email', 'orderid','price']
-                writer = csv.writer(f)
-                writer.writerow(header)
-                writer.writerow([userEmail, userEmail, orderId, orderAmount])
-                f.close()
-                blob_object.upload_from_filename('/tmp/' + fileName)
+            #create client object
+            clientObject = storage.Client(project=projectId)
+            #create bucket object
+            bucketObject = clientObject.get_bucket(bucketName)
+            #create file object
+            fileObject = bucketObject.blob(fileName)
+            # checks file exist or not
+            if(fileObject.exists()):
+                #download file to local machine
+                fileObject.download_to_filename('/tmp/' + fileName)
+                #open the file
+                file = open('/tmp/' + fileName, 'a', newline="")
+                #create file writer object
+                fileWriter = csv.writer(file)
+                #write in the file
+                fileWriter.writerow([userEmail, userEmail, orderId, orderAmount])
+                #close the file
+                file.close()
+                #upload the updated file
+                fileObject.upload_from_filename('/tmp/' + fileName)
+            else: 
+                #open the file 
+                file = open('/tmp/' + fileName, 'a', newline="")
+                #create csv header
+                CSVHeader = ['customerid', 'email', 'orderid','price']
+                #create file writer object
+                fileWriter = csv.writer(file)
+                #add headers in csv
+                fileWriter.writerow(CSVHeader)
+                #write in the file
+                fileWriter.writerow([userEmail, userEmail, orderId, orderAmount])
+                #close the file
+                file.close()
+                #upload the updated file
+                fileObject.upload_from_filename('/tmp/' + fileName)
 
             headers = {'Access-Control-Allow-Origin': '*'}
             data={"message": "Your order has been successfully placed."}
